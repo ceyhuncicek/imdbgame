@@ -1,0 +1,24 @@
+{
+  "name": "imdbgame",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/1Ceko/imdbgame.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/1Ceko/imdbgame/issues"
+  },
+  "homepage": "https://github.com/1Ceko/imdbgame#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "imdb": "^1.1.0"
+  }
+}
