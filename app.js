@@ -24,18 +24,19 @@ app.get('/', (req, res ) => {
 });
 
 //what server will do in post request
-app.post ('/', (req, res) => {
-    
+app.post ('/Play', (req, res) => {
+
     const url = 'tt3659388';
 
     //give url as movie id and get back movie details
     scraper.getDetails(url)
     .then((data)=>{
-            console.log(data);
+            //console.log(data);
+            res.render ('index', {data: data,} );
+
     }).catch((err)=>{
         console.log(err);
     });
-    res.send("Post isteği gönderildi");
 });
 
 
