@@ -1,12 +1,22 @@
-var imdb = require('imdb');
- 
-imdb('tt3659388', function(err, data) {
-  if(err)
-    console.log(err.stack);
- 
-  if(data)
-    //console.log(data);
+const imdb = require('imdb');
 
-    module.exports = data;
+
+function getDetails(url) {
+
+return new Promise(function (resolve, reject) {
+    imdb(url, function(err, data) {
+ 
+        if(data){
+            resolve(data);
+          return data;
+        }else {
+            reject(err);
+        }
+
+      });
 });
+}
 
+
+
+exports.getDetails = getDetails;
