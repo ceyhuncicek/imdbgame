@@ -1,6 +1,8 @@
 const imdb = require('imdb');
 
 
+
+
 function getDetails(url) {
 
 return new Promise(function (resolve, reject) {
