@@ -1,12 +1,55 @@
-var movies = require('./IDScraper2');
+var request = require('request');
+var cheerio = require('cheerio');
 
-url = "https://www.imdb.com/chart/moviemeter?pf_rd_m=A2FGELUUNOQJNL&pf_rd_p=4da9d9a5-d299-43f2-9c53-f0efa18182cd&pf_rd_r=W987ZYCJE05891WY61RC&pf_rd_s=right-4&pf_rd_t=15506&pf_rd_i=top&ref_=chttp_ql_2";
 
-// module.exports = function(url, cb) {
-  
-    movies(url, function(err, movieIDs) {
-      console.log(movieIDs);
-    });
-  
-  
-// }
+
+module.exports = function(url, cb) {
+  request(url, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      body = body.replace(/(\r\n|\n|\r)/gm,"").replace(/ +(?= )/g,'');
+      $ = cheerio.load(body);
+
+        var id = [];
+        var Movieid = [];
+        var title = [];
+        var year = [];
+        var poster = [];
+        var rating = [];
+
+      
+        for (i = 1; i < 250; i++) {
+
+            id[i] = [i];
+            Movieid[i] = $('#main > div > span > div > div > div.lister > table > tbody > tr:nth-child(' + i +') > td.titleColumn > a').attr('href')
+            title[i] = $('#main > div > span > div > div > div.lister > table > tbody > tr:nth-child(' + i +') > td.titleColumn > a').text();
+            year[i] = $('#main > div > span > div > div > div.lister > table > tbody > tr:nth-child(' + i +') > td.titleColumn > span').text();
+            poster[i] = $('#main > div > span > div > div > div.lister > table > tbody > tr:nth-child(' + i +') > td.posterColumn > a >img ').attr('src');
+            rating[i] = $('#main > div > span > div > div > div.lister > table > tbody > tr:nth-child(' + i +') > td.ratingColumn.imdbRating > strong').text();
+
+
+
+
+            if (Movieid[i]){
+              Movieid[i] = Movieid[i].split("/")[2];
+            } else {
+              Movieid[i] =  "N/A";
+            }
+
+        }
+      
+      cb(null, {
+          
+        id: id || "N/A",
+        Movieid: Movieid || "N/A",
+        title: title || "N/A",
+        year: year || "N/A",
+        poster: poster || "N/A",
+        rating: rating || "N/A"
+
+
+      });
+    } else { 
+      cb(new Error('IMDB Failed to respond, or responded with error code'), null); 
+    }
+  }); 
+}

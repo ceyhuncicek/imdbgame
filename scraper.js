@@ -11,7 +11,8 @@ return new Promise(function (resolve, reject) {
         if(data){
 
                 //change link to improve quality of poster
-                data.poster = data.poster.replace("UX182_CR0,0,182,268_AL", "SY1000_CR0,0,675,1000_AL");
+                splitted = data.poster.split('.')[3];
+                data.poster = data.poster.replace(splitted, "SY1000_CR0,0,675,1000_AL");
 
                 resolve(data);
                 return data;

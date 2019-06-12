@@ -4,6 +4,9 @@ const bodyParser = require('body-parser')
 const storage = require('node-persist');
 const scraper = require('./scraper'); 
 const AnalyzeScore = require('./AnalyzeScore'); 
+const idscraper = require('./IDScraper');
+const helper = require('./helper');
+
 
 
 
@@ -34,27 +37,51 @@ app.get('/', (req, res ) => {
 //what server will do in post request
 app.post ('/Play', (req, res) => {
 
-    const url = 'tt0111161';
+    async function makeRequest() {
 
-    //give url as movie id and get back movie details
-    scraper.getDetails(url)
-    .then((data)=>{
+        try {
+            //get scrapped data from storage if it is exist
+            data = await storage.getItem('Scrapedata');
+            console.log("Saved Data Catched");
+
+            //get random movie data from randomer
+            var data = helper.RandomPicker(data);
             //console.log(data);
 
+            res.render ('index', {data: data,} );
 
-            async function makeRequest() {
-                await storage.init( /* options ... */ );
-                await storage.setItem ('data', data );
-                res.render ('index', {data: data,} );
-              }
 
+            }
+            catch{
+                console.log("Error Happened While Catching Saved Data");
+            }
+          
+      }
               makeRequest();
 
+    
+    // const url = 'tt0111161';
+
+    
+    //give url as movie id and get back movie details
+    // scraper.getDetails(url)
+    // .then((data)=>{
+    //         //console.log(data);
+
+            
+    //         async function makeRequest() {
+    //             await storage.init( /* options ... */ );
+    //             await storage.setItem ('Currentdata', data );
+    //             res.render ('index', {data: data,} );
+    //           }
+
+    //           makeRequest();
 
 
-    }).catch((err)=>{
-        console.log(err);
-    });
+
+    // }).catch((err)=>{
+    //     console.log(err);
+    // });
 });
 
 app.post('/guess', urlencodedParser, function (req, res) {
@@ -63,10 +90,10 @@ app.post('/guess', urlencodedParser, function (req, res) {
     //catch post value and name it as score
     score = req.body.score;
 
-    async function makeRequest() {
+    async function runFunction() {
     
         //gate data value from storage
-        data = await storage.getItem('data');
+        data = await storage.getItem('Currentdata');
 
         //check if score is same with data.rating
         AnalyzeScore(score);
@@ -76,9 +103,41 @@ app.post('/guess', urlencodedParser, function (req, res) {
     }
 
     //start async function
-    makeRequest();
+    runFunction();
 
 });
+
+
+app.post('/idScraper', urlencodedParser, function (req, res) {
+
+    url = req.body.url;
+
+    //scrap movie id's from this url
+    idscraper(url, function(err, data) {
+        console.log("scraper çalıştı");
+        calistir(data);
+      });
+
+    //save scrapped data to storage
+    function calistir(data){
+        var Scrapedata = data;
+        async function makeRequest() {
+
+            await storage.init( /* options ... */ );
+            await storage.setItem ('Scrapedata', Scrapedata );
+            console.log("veri kaydedildi");
+            res.redirect('/')
+    
+          }
+          makeRequest();
+
+    }
+      
+
+
+    
+});
+
 
 //while server is working on 3000 port give message
 app.listen(3000, () => {
