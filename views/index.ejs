@@ -7,7 +7,7 @@
     
     <!--include style-->
     <%- include style.ejs %>
-
+    </style>
     <title>IMDBGame</title>
 </head>
 <body>    
@@ -34,6 +34,14 @@
                                 <input type="submit" class="btn btn-info" value="Play!">
                             </form>
                         </div>
+                        <div class="container">
+
+                            <form action="/guess" method="post">
+                                <input type="text" name="score">
+                                <input type="submit" class="btn btn-info" value="Guess!">
+                            </form>
+                        </div>
+
                     </div><!--movie-content-->
                 </div><!--movie-card-->
                 

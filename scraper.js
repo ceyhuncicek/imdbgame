@@ -2,7 +2,7 @@ const imdb = require('imdb');
 
 
 
-
+//function get url to get details
 function getDetails(url) {
 
 return new Promise(function (resolve, reject) {
@@ -12,7 +12,7 @@ return new Promise(function (resolve, reject) {
 
                 //change link to improve quality of poster
                 data.poster = data.poster.replace("UX182_CR0,0,182,268_AL", "SY1000_CR0,0,675,1000_AL");
-                
+
                 resolve(data);
                 return data;
 
@@ -25,5 +25,5 @@ return new Promise(function (resolve, reject) {
 }
 
 
-
+//export function for other modules
 exports.getDetails = getDetails;

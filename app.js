@@ -1,6 +1,14 @@
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser')
+const storage = require('node-persist');
 const scraper = require('./scraper'); 
+const AnalyzeScore = require('./AnalyzeScore'); 
+
+
+
+// create application/x-www-form-urlencoded parser
+const urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 //set view engine as ejs
 app.set('view engine', 'ejs');
@@ -26,20 +34,51 @@ app.get('/', (req, res ) => {
 //what server will do in post request
 app.post ('/Play', (req, res) => {
 
-    const url = 'tt3659388';
+    const url = 'tt0111161';
 
     //give url as movie id and get back movie details
     scraper.getDetails(url)
     .then((data)=>{
             //console.log(data);
-            res.render ('index', {data: data,} );
+
+
+            async function makeRequest() {
+                await storage.init( /* options ... */ );
+                await storage.setItem ('data', data );
+                res.render ('index', {data: data,} );
+              }
+
+              makeRequest();
+
+
 
     }).catch((err)=>{
         console.log(err);
     });
 });
 
+app.post('/guess', urlencodedParser, function (req, res) {
 
+
+    //catch post value and name it as score
+    score = req.body.score;
+
+    async function makeRequest() {
+    
+        //gate data value from storage
+        data = await storage.getItem('data');
+
+        //check if score is same with data.rating
+        AnalyzeScore(score);
+
+        //render page with sending data
+        res.render ('index', {data: data,} );
+    }
+
+    //start async function
+    makeRequest();
+
+});
 
 //while server is working on 3000 port give message
 app.listen(3000, () => {
