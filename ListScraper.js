@@ -21,12 +21,18 @@ module.exports = function(url, cb) {
 
             id[i] = [i];
             Movieid[i] = $('#main > div > span > div > div > div.lister > table > tbody > tr:nth-child(' + i +') > td.titleColumn > a').attr('href')
-            title[i] = $('#main > div > span > div > div > div.lister > table > tbody > tr:nth-child(' + i +') > td.titleColumn > a').text();
+            title[i] = $('#main > div > span > div > div > div.lister > table > tbody > tr:nth-child(' + i +') > td.titleColumn > a').text().replace(/\(\d+\)/g, '').trim();
             year[i] = $('#main > div > span > div > div > div.lister > table > tbody > tr:nth-child(' + i +') > td.titleColumn > span').text();
             poster[i] = $('#main > div > span > div > div > div.lister > table > tbody > tr:nth-child(' + i +') > td.posterColumn > a >img ').attr('src');
-            rating[i] = $('#main > div > span > div > div > div.lister > table > tbody > tr:nth-child(' + i +') > td.ratingColumn.imdbRating > strong').text();
+            //make poster high quality
+            splitted = poster[i].split('.')[3];
+            poster[i] = poster[i].replace(splitted, "SY1000_CR0,0,675,1000_AL");
+            rating[i] = $('#main > div > span > div > div > div.lister > table > tbody > tr:nth-child(' + i +') > td.ratingColumn.imdbRating > strong').text()
+            // .replace(/\(\d+\)/g, '').trim();
 
-
+            if(title[i] === undefined || title[i] === null || title[i] === "N/A" || title[i] === '' || title[i] === "null") {
+              break;
+            }
 
 
             if (Movieid[i]){

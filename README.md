@@ -11,3 +11,7 @@ aslında hazır listeden id yi çekmişken isim ve rate'i de çekip obje içine 
 i added body parse to catch post requestes.
 
 i dediced to use node-persist to save some data in local storage temprorary.
+
+
+
+
