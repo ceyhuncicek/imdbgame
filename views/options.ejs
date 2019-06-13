@@ -31,20 +31,22 @@
                         </div>
                         <div class="container">
                             <form action="/Play" method="post">
-                                <input type="submit" class="btn btn-info" value="Play!">
+                                <input type="submit" class="btn btn-info" value="Start!">
                             </form>
                         </div>
                         <div class="container">
-                            <form action="/Options" method="get">
-                                <input type="submit" class="btn btn-info" value="Options">
+
+                            <form action="/ListScraper" method="post">
+                                <input type="hidden" name="url" value="https://www.imdb.com/chart/top">
+                                <input type="submit" class="btn btn-info" value="Top 250">
                             </form>
                         </div>
                         <div class="container">
-                                <form action="/guess" method="post">
-                                    <input type="text" name="score">
-                                    <input type="submit" class="btn btn-info" value="Guess!">
-                                </form>
-                            
+
+                            <form action="/ListScraper" method="get">
+                                <input type="text" name="url">
+                                <input type="submit" class="btn btn-info" value="">
+                            </form>
                         </div>
 
                     </div><!--movie-content-->

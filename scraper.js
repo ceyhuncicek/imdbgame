@@ -2,17 +2,16 @@ const imdb = require('imdb');
 
 
 
-//function get url to get details
+//function get url to
 function getDetails(url) {
 
 return new Promise(function (resolve, reject) {
     imdb(url, function(err, data) {
  
         if(data){
-
+                console.log(data);
                 //change link to improve quality of poster
-                splitted = data.poster.split('.')[3];
-                data.poster = data.poster.replace(splitted, "SY1000_CR0,0,675,1000_AL");
+                // data.poster = data.poster.replace("UX182_CR0,0,182,268_AL", "SY1000_CR0,0,675,1000_AL");
 
                 resolve(data);
                 return data;

@@ -3,8 +3,7 @@ const app = express();
 const bodyParser = require('body-parser')
 const storage = require('node-persist');
 const scraper = require('./scraper'); 
-const AnalyzeScore = require('./AnalyzeScore'); 
-const idscraper = require('./IDScraper');
+const ListScraper = require('./ListScraper');
 const helper = require('./helper');
 
 
@@ -20,46 +19,56 @@ app.set('view engine', 'ejs');
 app.get('/', (req, res ) => {
 
 
-    let data = { title: 'The Martian',
-    year: '2015',
-    description: 'During a manned mission to Mars, Astronaut Mark Watney is presumed dead after a fierce storm and left behind by his crew. But Watney has survived and finds himself stranded and alone on the hostile planet. With only meager supplies, he must draw upon his ingenuity, wit and spirit to subsist and find a way to signal to Earth that he is alive.',
-    rating: '8.1',
-    poster: 'https://m.media-amazon.com/images/M/MV5BMTc2MTQ3MDA1Nl5BMl5BanBnXkFtZTgwODA3OTI4NjE@._V1_SY1000_CR0,0,675,1000_AL_.jpg',
-    genre: [ 'Adventure', ' Drama', ' Sci-Fi' ]
-    }
+    //get dummyData to show in index
+    let data = helper.DummyData;
 
     res.render ('index', {data: data,} );
+ 
+});
+
+app.get('/Options', (req, res ) => {
 
 
+    //get dummyData to show in index
+    let data = helper.DummyData;
+
+    res.render ('options', {data: data,} );
 
 });
+
 
 //what server will do in post request
 app.post ('/Play', (req, res) => {
 
-    async function makeRequest() {
+    async function SaveCurrentDataAsync() {
+        try {
+        Currentdata = data;
+        await storage.setItem ('Currentdata', Currentdata );
+            console.log("anlık dosya kaydedildi");
+        }catch{
+            console.log("anlık dosya kaydedilemedi!");
+        }
+    }
+
+    async function GetScrapeData() {
 
         try {
             //get scrapped data from storage if it is exist
             data = await storage.getItem('Scrapedata');
-            console.log("Saved Data Catched");
-
+            console.log("Data has been taken from storage");
+            // let max = 250;
             //get random movie data from randomer
-            var data = helper.RandomPicker(data);
-            //console.log(data);
+            data = helper.RandomPicker(data);
 
             res.render ('index', {data: data,} );
-
-
+            SaveCurrentDataAsync(data);
+            }catch{
+                console.log("Error while getting Scrapedata");
             }
-            catch{
-                console.log("Error Happened While Catching Saved Data");
-            }
-          
-      }
-              makeRequest();
-
-    
+    }
+    GetScrapeData();
+      
+       
     // const url = 'tt0111161';
 
     
@@ -86,17 +95,16 @@ app.post ('/Play', (req, res) => {
 
 app.post('/guess', urlencodedParser, function (req, res) {
 
-
     //catch post value and name it as score
     score = req.body.score;
 
     async function runFunction() {
-    
+
         //gate data value from storage
         data = await storage.getItem('Currentdata');
 
         //check if score is same with data.rating
-        AnalyzeScore(score);
+        helper.AnalyzeScore(score,data);
 
         //render page with sending data
         res.render ('index', {data: data,} );
@@ -108,36 +116,55 @@ app.post('/guess', urlencodedParser, function (req, res) {
 });
 
 
-app.post('/idScraper', urlencodedParser, function (req, res) {
+app.post('/ListScraper', urlencodedParser, function (req, res) {
 
-    url = req.body.url;
+        url = req.body.url;
 
-    //scrap movie id's from this url
-    idscraper(url, function(err, data) {
-        console.log("scraper çalıştı");
-        calistir(data);
-      });
-
-    //save scrapped data to storage
-    function calistir(data){
-        var Scrapedata = data;
-        async function makeRequest() {
-
-            await storage.init( /* options ... */ );
-            await storage.setItem ('Scrapedata', Scrapedata );
-            console.log("veri kaydedildi");
-            res.redirect('/')
+        //scrap movie id's from this url
+        ListScraper(url, function(err, data) {
+            console.log("Manuel Scrapper is Working");
+            calistir(data);
+          });
     
-          }
-          makeRequest();
-
-    }
-      
-
-
+        //save scrapped data to storage
+        function calistir(data){ 
+            // var Scrapedata = data;
+            async function ScrapData() {
+                Scrapedata = data;
+                await storage.init( /* options ... */ );
+                await storage.setItem('Scrapedata',Scrapedata)
+                res.redirect('/')
+              }
+        ScrapData();
+        }
     
 });
 
+
+app.get('/getlink', urlencodedParser, function (req, res) {
+
+   const url = 'tt0034583';
+
+    //give url as movie id and get back movie details
+    scraper.getDetails(url)
+    .then((data)=>{
+            //console.log(data);
+
+            
+            async function makeRequest() {
+                await storage.init( /* options ... */ );
+                await storage.setItem ('Currentdata', data );
+                console.log(data);
+                res.render ('index', {data: data,} );
+              }
+
+              makeRequest();
+
+    }).catch((err)=>{
+        console.log(err);
+    });
+    
+});
 
 //while server is working on 3000 port give message
 app.listen(3000, () => {

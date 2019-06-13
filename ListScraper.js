@@ -35,8 +35,8 @@ module.exports = function(url, cb) {
               Movieid[i] =  "N/A";
             }
 
-        }
-      
+          }
+
       cb(null, {
           
         id: id || "N/A",
@@ -48,6 +48,7 @@ module.exports = function(url, cb) {
 
 
       });
+
     } else { 
       cb(new Error('IMDB Failed to respond, or responded with error code'), null); 
     }
