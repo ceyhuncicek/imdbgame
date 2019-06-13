@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <!--include style-->
+    <%- include style.ejs %>
+    </style>
+    <title>IMDBGame</title>
+</head>
+<body>    
+        <div class="container">
+            <div class="movie-card">
+                    <div class="movie-header Movie">
+                    </div><!--movie-header-->
+                    <div class="movie-content">
+                        <div class="movie-content-header">
+                            <h3 class="movie-title"><%= data.title %> <%= data.year %></h3>
+                        </div>
+                        <div class="movie-info">
+                            <div class="info-section">
+                                <label>Genre</label>
+                                <span><%= data.genre %></span>
+                            </div><!--date,time-->
+                            <div class="info-section">
+                                <label>IMDB Rate</label>
+                                <span><%= data.rating %></span>
+                            </div><!--imdb rate-->
+                        </div>
+                        <div class="container">
+                            <form action="/Play" method="post">
+                                <input type="submit" class="btn btn-info" value="Start!">
+                            </form>
+                        </div>
+                        <div class="container">
+
+                            <form action="/ListScraper" method="post">
+                                <input type="hidden" name="url" value="https://www.imdb.com/chart/top">
+                                <input type="submit" class="btn btn-info" value="Top 250">
+                            </form>
+                        </div>
+                        <div class="container">
+
+                            <form action="/ListScraper" method="post">
+                                <input type="text" name="url">
+                                <input type="submit" class="btn btn-info" value="Scrap Link">
+                            </form>
+                        </div>
+
+                    </div><!--movie-content-->
+                </div><!--movie-card-->
+                
+            </div><!--container-->
+
+            <!--include scripts-->
+            <%- include script.ejs %>
+</body>
+</html>
