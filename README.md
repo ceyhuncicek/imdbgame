@@ -6,8 +6,6 @@ I used bootstrap and https://bootsnipp.com/snippets/z8PZx card template thanks t
 
 i made IDScraper which scrap id's from a imdb link then scrap movie id's from it and put it in data object.
 
-aslında hazır listeden id yi çekmişken isim ve rate'i de çekip obje içine atabilirim. Eğer ekstra bilgi gerekirse mesela genre gibi onu da ekstra çekebilirim. Böylece daha hızlı çalışır.
-
 i added body parse to catch post requestes.
 
 i dediced to use node-persist to save some data in local storage temprorary.
