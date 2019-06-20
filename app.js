@@ -5,6 +5,8 @@ const storage = require('node-persist');
 const scraper = require('./scraper'); 
 const ListScraper = require('./ListScraper');
 const helper = require('./helper');
+var http = require('http').createServer(app);
+var io = require('socket.io')(http);
 
 
 
@@ -21,9 +23,28 @@ app.get('/', (req, res ) => {
     //get dummyData to show first time
     let data = helper.DummyData;
 
-    res.render ('index', {data: data,} );
+    res.sendFile(__dirname + "/Assest/" + "index.html");
+
  
 });
+
+io.on('connection', function(socket){
+
+    let data = helper.DummyData;
+
+
+    socket.emit('news', data);
+    socket.on('my other event', function(data) {
+        console.log(data);
+    });
+
+
+
+    console.log('a user connected');
+    socket.on('disconnect', function(){
+      console.log('user disconnected');
+    });
+  });
 
 app.get('/Options', (req, res ) => {
 
@@ -150,6 +171,6 @@ app.get('/getlink', urlencodedParser, function (req, res) {
 });
 
 //while server is working on 3000 port give message
-app.listen(3000, () => {
+http.listen(3000, () => {
     console.log('Express server is working')
 });
